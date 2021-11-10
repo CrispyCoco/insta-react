@@ -32,7 +32,7 @@ class register extends Component {
           value={this.state.password}
           secureTextEntry={true}
         />
-        <TouchableOpacity onPress={() => console.log("me registre")}>
+        <TouchableOpacity onPress={() => this.props.register(this.state.email, this.state.password, this.state.username)}>
           <Text> Register </Text>
         </TouchableOpacity>
       </View>
