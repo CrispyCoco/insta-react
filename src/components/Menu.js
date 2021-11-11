@@ -17,6 +17,7 @@ class Menu extends Component {
     this.state = {
       user: null,
       loggedIn: false,
+      loaded: false
     };
   }
 
@@ -28,6 +29,9 @@ class Menu extends Component {
           user: user,
         });
       }
+      this.setState({
+        loaded: true
+      })
     });
   }
   register(email, pass, username) {
@@ -58,6 +62,7 @@ class Menu extends Component {
   }
   render() {
     return (
+      this.state.loaded?(      
       <NavigationContainer>
         {!this.state.loggedIn ? (
           <Drawer.Navigator>
@@ -87,7 +92,9 @@ class Menu extends Component {
             <Drawer.Screen name="Add Post" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
           </Drawer.Navigator>
         )}
-      </NavigationContainer>
+      </NavigationContainer>):(
+        <Text></Text>
+      )
     );
   }
 }
