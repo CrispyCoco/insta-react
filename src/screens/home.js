@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
+import {db} from '../firebase/config'
 
  class home extends Component {
      constructor (props){
