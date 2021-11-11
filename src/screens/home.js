@@ -5,8 +5,23 @@ import { Text, View } from 'react-native'
      constructor (props){
          super(props)
          this.state ={
+             posts: null
              
          }
+     }
+     componentDidMount(){
+         db.collection('posts').onSnapshot(
+             docs=>{
+                 let posts = []
+                 docs.forEach(doc => {
+                     posts.push({
+                         id:doc.id,
+                         data:doc.data()
+                     })
+                 });
+                 this.setState({posts:posts})
+             }
+         )
      }
     render() {
         return (
