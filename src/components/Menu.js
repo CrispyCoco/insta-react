@@ -84,7 +84,7 @@ class Menu extends Component {
           <Drawer.Navigator>
             <Drawer.Screen name="Home" component={() => <Home />} />
             <Drawer.Screen name="Profile" component={() => <Profile />} />
-            <Drawer.Screen name="Add Post" component={() => <AddPost />} />
+            <Drawer.Screen name="Add Post" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
           </Drawer.Navigator>
         )}
       </NavigationContainer>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import MyCamera from "../components/MyCamera";
-import {db} from '../firebase/config'
+import {auth, db} from '../firebase/config'
 class addPost extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +18,20 @@ class addPost extends Component {
         url: url
       })
   }
+  submitPost(){
+    db.collection('posts').add({
+      owner: auth.currentUser.displayName,
+      description: this.state.description,
+      createdAdd: Date.now(),
+      picture: this.state.url
+    })
+    .then(()=>{
+      this.setState({
+        description:""
+      })
+      this.props.drawerProps.navigation.navigate('Home')
+    })
+  }
   render() {
     return (
       <View style={styles.viewCamera}>
@@ -31,7 +45,7 @@ class addPost extends Component {
               keyboardType="default"
               value={this.state.description}
             />
-            <TouchableOpacity onPress={() => console.log("AGREGAR post")}>
+            <TouchableOpacity onPress={() => this.submitPost()}>
               <Text> Add Post </Text>
             </TouchableOpacity>
           </View>
