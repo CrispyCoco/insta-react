@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableHighlightBase } from 'react-native'
+import { Text, View, FlatList, TouchableHighlightBase, StyleSheet } from 'react-native'
 import Post from "../components/Post"
 import {db} from '../firebase/config'
 
@@ -27,7 +27,7 @@ import {db} from '../firebase/config'
      }
     render() {
         return (
-            <View>
+            <View style={styles.home}>
                 <FlatList 
                 data= {this.state.posts}
                 keyExtractor= {post=> post.id}
@@ -37,5 +37,11 @@ import {db} from '../firebase/config'
         )
     }
 }
+
+const styles = StyleSheet.create({
+    home:{
+        flex:1
+    }
+})
 
 export default home;

@@ -1,25 +1,189 @@
-import React, { Component } from 'react'
-import { Image, Text, View } from 'react-native'
+import React, { Component } from "react";
+import {
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  TextInput,
+  FlatList
+} from "react-native";
 import { auth, db } from "../firebase/config";
+import firebase from "firebase";
 
 class Post extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+  constructor(props) {
+    super(props);
+    this.state = {
+      likes: 0,
+      myLike: false,
+      modal: false,
+      comment: "",
+      comments: "",
+      commented: false,
+    };
+  }
 
-        };
-      }
-
-    render() {
-        return (
-            <View>
-                <Text>{this.props.data.data.owner}</Text>
-                <Image source={{uri:this.props.data.data.picture}}/>
-                <Text>{this.props.data.data.description}</Text>
-                
-            </View>
-        )
+  componentDidMount() {
+    if (this.props.data.data.likes) {
+      this.setState({
+        likes: this.props.data.data.likes.length,
+        myLike: this.props.data.data.likes.includes(
+          auth.currentUser.displayName
+        ),
+      });
     }
+    if (this.props.data.data.comments) {
+      this.setState({
+        comments: this.props.data.data.comments,
+        commented: true,
+      });
+    }
+  }
+
+  like() {
+    db.collection("posts")
+      .doc(this.props.data.id)
+      .update({
+        likes: firebase.firestore.FieldValue.arrayUnion(
+          auth.currentUser.displayName
+        ),
+      })
+      .then(() => {
+        this.setState({
+          likes: this.state.likes + 1,
+          myLike: true,
+        });
+      });
+  }
+
+  unLike() {
+    db.collection("posts")
+      .doc(this.props.data.id)
+      .update({
+        likes: firebase.firestore.FieldValue.arrayRemove(
+          auth.currentUser.displayName
+        ),
+      })
+      .then(() => {
+        this.setState({
+          likes: this.state.likes - 1,
+          myLike: false,
+        });
+      });
+  }
+
+  comment(){
+      let commentObject = {
+          createdAt: Date.now(),
+          owner: auth.currentUser.displayName,
+          comment: this.state.comment,
+      }
+    db.collection("posts")
+    .doc(this.props.data.id)
+    .update({
+      comments: firebase.firestore.FieldValue.arrayUnion(
+        commentObject
+      ),
+    })
+    .then(() => {
+      this.setState({
+        comments: this.props.data.data.comments,
+        commented: true,
+        comment: ''
+      });
+    });
+  }
+
+  viewComments(){
+      if(this.state.modal){
+          this.setState({
+              modal:false
+          })
+      }else{
+          this.setState({
+              modal:true
+          })
+      }
+  }
+
+  render() {
+    return (
+      <View style={styles.post}>
+        <Text>{this.props.data.data.owner}</Text>
+        <Image
+          style={styles.image}
+          source={{ uri: this.props.data.data.picture }}
+        />
+        <Text>{this.props.data.data.description}</Text>
+        <Text>{this.state.likes} Likes </Text>
+        {this.state.myLike ? (
+          <TouchableOpacity onPress={() => this.unLike()}>
+            <Text> Unlike </Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => this.like()}>
+            <Text> Like </Text>
+          </TouchableOpacity>
+        )}
+       
+        {this.state.modal ?(
+            <Modal 
+            visible={this.state.modal}
+            animtationType="slide"
+            transparent={false}
+          >
+        <TouchableOpacity onPress={()=> this.viewComments()}>
+            <Text>
+                X
+            </Text>
+        </TouchableOpacity>
+            {this.state.commented ? (
+              <FlatList
+                data={this.state.comments}
+                keyExtractor={(comment) => comment.createdAt.toString()}
+                renderItem={({ item }) => (
+                  <Text>
+                    {" "}
+                    {item.owner}: {item.comment}
+                  </Text>
+                )}
+              />
+            ) : (
+              <Text> No comments </Text>
+            )}
+  
+            <TextInput
+              onChangeText={(text) => this.setState({ comment: text })}
+              placeholder="Add comment..."
+              keyboardType="default"
+              value={this.state.comment}
+            />
+            <TouchableOpacity onPress={() => this.comment()}>
+               <Text>Comment</Text>
+            </TouchableOpacity>
+          </Modal>
+        ): (
+            <TouchableOpacity onPress={()=> this.viewComments()}>
+            <Text>
+                View comments
+            </Text>
+        </TouchableOpacity>
+        )}
+        
+      </View>
+    );
+  }
 }
+
+const styles = StyleSheet.create({
+  image: {
+    height: 100,
+  },
+  post: {
+    flex: 2,
+  },
+});
 
 export default Post;
