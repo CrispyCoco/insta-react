@@ -22,7 +22,7 @@ class addPost extends Component {
     db.collection('posts').add({
       owner: auth.currentUser.displayName,
       description: this.state.description,
-      createdAdd: Date.now(),
+      createdAt: Date.now(),
       picture: this.state.url
     })
     .then(()=>{

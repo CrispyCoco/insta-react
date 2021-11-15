@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, FlatList, TouchableHighlightBase } from 'react-native'
+import Post from "../components/Post"
 import {db} from '../firebase/config'
 
  class home extends Component {
@@ -11,7 +12,7 @@ import {db} from '../firebase/config'
          }
      }
      componentDidMount(){
-         db.collection('posts').onSnapshot(
+         db.collection('posts').orderBy("createdAt", "desc").onSnapshot(
              docs=>{
                  let posts = []
                  docs.forEach(doc => {
@@ -27,7 +28,11 @@ import {db} from '../firebase/config'
     render() {
         return (
             <View>
-                <Text> textInComponent </Text>
+                <FlatList 
+                data= {this.state.posts}
+                keyExtractor= {post=> post.id}
+                renderItem= {({item})=> <Post data={item}/>}
+                />
             </View>
         )
     }
