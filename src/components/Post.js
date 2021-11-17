@@ -124,7 +124,7 @@ class Post extends Component {
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => this.like()}>
-            <Text> Like </Text>
+            <Text > Like </Text>
           </TouchableOpacity>
         )}
        
@@ -135,7 +135,7 @@ class Post extends Component {
             transparent={false}
           >
         <TouchableOpacity onPress={()=> this.viewComments()}>
-            <Text>
+            <Text style={styles.closeButton}>
                 X
             </Text>
         </TouchableOpacity>
@@ -183,6 +183,17 @@ const styles = StyleSheet.create({
   },
   post: {
     flex: 2,
+  },
+  closeButton: {
+    color: "#fff",
+    padding: 5,
+    backgroundColor: "#dc3545",
+    alignSelf: "flex-end",
+    borderRadius: 4,
+    paddingHorizontal: 8,
+  },
+  comment: {
+    color: "#fff",
   },
 });
 
