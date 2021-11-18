@@ -115,6 +115,7 @@ class Post extends Component {
         <Image
           style={styles.image}
           source={{ uri: this.props.data.data.picture }}
+          reziseMode='contain'
         />
         <Text>{this.props.data.data.description}</Text>
         <Text>{this.state.likes} Likes </Text>
@@ -180,6 +181,7 @@ class Post extends Component {
 const styles = StyleSheet.create({
   image: {
     height: '100px',
+    
   },
   post: {
     flex: 2,

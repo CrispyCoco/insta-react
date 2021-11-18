@@ -1,53 +1,94 @@
 import React, { Component } from "react";
-import { Text, View, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from "react-native";
 import MyCamera from "../components/MyCamera";
-import {auth, db} from '../firebase/config'
+import { auth, db } from "../firebase/config";
 class addPost extends Component {
   constructor(props) {
     super(props);
     this.state = {
       description: "",
-      showCamera: true,
-      url: ''
+      showCamera: false,
+      url: "",
     };
   }
 
-  uploadImage(url){
-      this.setState({
-        showCamera: false,
-        url: url
-      })
+  uploadImage(url) {
+    this.setState({
+      showCamera: false,
+      url: url,
+    });
   }
-  submitPost(){
-    db.collection('posts').add({
-      owner: auth.currentUser.displayName,
-      description: this.state.description,
-      createdAt: Date.now(),
-      picture: this.state.url
-    })
-    .then(()=>{
-      this.setState({
-        description:"",
-        showCamera: true
+  submitPost() {
+    db.collection("posts")
+      .add({
+        owner: auth.currentUser.displayName,
+        description: this.state.description,
+        createdAt: Date.now(),
+        picture: this.state.url,
       })
-      this.props.drawerProps.navigation.navigate('Home')
-    })
+      .then(() => {
+        this.setState({
+          description: "",
+        });
+        this.props.drawerProps.navigation.navigate("Home");
+      });
   }
+
+  toggleCamera() {
+    this.setState({
+      showCamera: true,
+    });
+  }
+
   render() {
     return (
       <View style={styles.viewCamera}>
         {this.state.showCamera ? (
-          <MyCamera uploadImage={(url) => this.uploadImage(url)}/>
+          <MyCamera uploadImage={(url) => this.uploadImage(url)} />
         ) : (
-          <View>
+          <View style={styles.viewCamera}>
+            {this.state.url.length == 0 ? (
+              <Text style={styles.title}>Please take a picture!</Text>
+            ) : (
+              <Image style={styles.picture} source={{ uri: this.state.url }} />
+            )}
             <TextInput
+              style={styles.input}
               onChangeText={(text) => this.setState({ description: text })}
               placeholder="Description"
               keyboardType="default"
               value={this.state.description}
             />
-            <TouchableOpacity onPress={() => this.submitPost()}>
-              <Text> Add Post </Text>
+            <TouchableOpacity
+              style={
+                this.state.url.length == 0 || this.state.description.length == 0
+                  ? styles.buttonD
+                  : styles.button
+              }
+              disabled={
+                this.state.url.length == 0 || this.state.description.length == 0
+                  ? true
+                  : false
+              }
+              onPress={() => this.submitPost()}
+            >
+              <Text style={styles.textButton}> Add Post </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={
+                this.state.url.length == 0 ? styles.button : styles.buttonD
+              }
+              disabled={this.state.url.length == 0 ? false : true}
+              onPress={() => this.toggleCamera()}
+            >
+              <Text style={styles.textButton}> Take Picture </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -57,14 +98,53 @@ class addPost extends Component {
 }
 
 const styles = StyleSheet.create({
-  camera:{
-      flex: 7
+  camera: {
+    flex: 6,
   },
-  button:{
-      flex: 1
+  button: {
+    width: "80%",
+    backgroundColor: "rgb(223, 0, 231)",
+    borderRadius: "10px",
+    marginTop: 15,
   },
-  viewCamera:{
-      flex: 1
-  }
-})
+  viewCamera: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgb(12, 11, 14)",
+    width: "100%",
+  },
+  input: {
+    width: "80%",
+    border: "1px solid black",
+    borderRadius: "10px",
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    marginVertical: 8,
+    backgroundColor: "rgba(87, 84, 95, 0.445)",
+    color: "white",
+  },
+  textButton: {
+    color: "white",
+    width: "100%",
+    textAlign: "center",
+    paddingVertical: 10,
+  },
+  picture: {
+    height: 200,
+    width: 200,
+  },
+  buttonD: {
+    width: "80%",
+    backgroundColor: "gray",
+    borderRadius: "10px",
+    marginTop: 15,
+  },
+  title: {
+    color: "rgba(87, 84, 95, 0.445)",
+    marginBottom: 30,
+    fontSize: 20,
+  },
+});
 export default addPost;

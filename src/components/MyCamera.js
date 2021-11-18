@@ -9,7 +9,7 @@ class MyCamera extends Component {
     this.state = {
       permissions: false,
       photo: "",
-      showCamera: true
+      showCamera: true,
     };
     this.camera;
   }
@@ -24,74 +24,74 @@ class MyCamera extends Component {
   }
 
   takePicture(picture) {
-      this.camera.takePictureAsync()
-      .then((response) => {
-          this.setState({
-              photo: response.uri,
-              showCamera: false
-          })
-      })
+    this.camera.takePictureAsync().then((response) => {
+      this.setState({
+        photo: response.uri,
+        showCamera: false,
+      });
+    });
   }
   newPicture() {
-      this.setState({
-          photo: '',
-          showCamera: true
-      })
+    this.setState({
+      photo: "",
+      showCamera: true,
+    });
   }
 
-  savePicture(){
-      fetch(this.state.photo)
-      .then(response => response.blob())
-      .then(picture =>{
-          const ref = storage.ref(`photos/${Date.now()}.jpg`)
-          ref.put(picture)
-          .then(()=>{
-              ref.getDownloadURL()
-              .then((url)=>{
-                  this.props.uploadImage(url);
-                  this.setState({
-                      photo:'',
-                  })
-              })
-          })
-
-      })
-
+  savePicture() {
+    fetch(this.state.photo)
+      .then((response) => response.blob())
+      .then((picture) => {
+        const ref = storage.ref(`photos/${Date.now()}.jpg`);
+        ref.put(picture).then(() => {
+          ref.getDownloadURL().then((url) => {
+            this.props.uploadImage(url);
+            this.setState({
+              photo: "",
+            });
+          });
+        });
+      });
   }
   render() {
     return (
       <View style={styles.viewCamera}>
         {this.state.permissions ? (
-            this.state.showCamera?(
-                <View style={styles.viewCamera}>
-            <Camera
-              style={styles.camera}
-              type={Camera.Constants.Type.back}
-              ref={(reference) => (this.camera = reference)}
-            />
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.takePicture()}
-            >
-              <Text>Tomar foto</Text>
-            </TouchableOpacity>
-          </View>
-            ):(
-                <>
-                <Image style={styles.camera} source={{uri: this.state.photo}}/>
-                <View>
-                    <TouchableOpacity onPress={() => this.savePicture()}>
-                        <Text>Save</Text>
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <TouchableOpacity onPress={() => this.newPicture()}>
-                        <Text>Take new picture</Text>
-                    </TouchableOpacity>
-                </View>
-                </>
-            )
-          
+          this.state.showCamera ? (
+            <View style={styles.viewCamera}>
+              <Camera
+                style={styles.camera}
+                type={Camera.Constants.Type.back}
+                ref={(reference) => (this.camera = reference)}
+              />
+              <View style={styles.viewButtons}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => this.takePicture()}
+                >
+                  <Text style={styles.textButton}>Tomar foto</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <>
+              <Image style={styles.camera} source={{ uri: this.state.photo }} />
+              <View style={styles.viewButtonsPic}>
+                <TouchableOpacity
+                  style={styles.buttonCancel}
+                  onPress={() => this.newPicture()}
+                >
+                  <Text style={styles.textButtonOp}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonSave}
+                  onPress={() => this.savePicture()}
+                >
+                  <Text style={styles.textButton}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          )
         ) : (
           <Text>No hay permiso</Text>
         )}
@@ -101,14 +101,60 @@ class MyCamera extends Component {
 }
 
 const styles = StyleSheet.create({
-    camera:{
-        flex: 7
-    },
-    button:{
-        flex: 1
-    },
-    viewCamera:{
-        flex: 1
-    }
-})
+  camera: {
+    flex: 4,
+    width: "80%",
+    marginTop: 15,
+  },
+  button: {
+    // width: "80%",
+    backgroundColor: "rgb(223, 0, 231)",
+    borderRadius: "10px",
+    marginTop: 15,
+  },
+  textButton: {
+    color: "white",
+    width: "100%",
+    textAlign: "center",
+    paddingVertical: 10,
+  },
+  viewCamera: {
+    flex: 1,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  viewButtons: {
+    flex: 1,
+    width: "80%",
+  },
+  buttonSave: {
+    backgroundColor: "rgb(223, 0, 231)",
+    borderRadius: "10px",
+    marginTop: 15,
+    width: "45%",
+
+  },
+  buttonCancel: {
+    backgroundColor: "white",
+    borderRadius: "10px",
+    marginTop: 15,
+    width: "45%",
+  },
+  textButtonOp: {
+    color: "rgb(223, 0, 231)",
+    width: "100%",
+    textAlign: "center",
+    paddingVertical: 10,
+  },
+  viewButtonsPic: {
+    flex: 1,
+    width: "80%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around"
+  },
+});
 export default MyCamera;
