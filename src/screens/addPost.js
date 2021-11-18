@@ -27,7 +27,8 @@ class addPost extends Component {
     })
     .then(()=>{
       this.setState({
-        description:""
+        description:"",
+        showCamera: true
       })
       this.props.drawerProps.navigation.navigate('Home')
     })
