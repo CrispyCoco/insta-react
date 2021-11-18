@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   post: {
-    flex: 2,
+    flex: 2
   },
   closeButton: {
     color: "#fff",

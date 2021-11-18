@@ -179,10 +179,14 @@ class Post extends Component {
 
 const styles = StyleSheet.create({
   image: {
-    height: 100,
+    height: '100px',
   },
   post: {
     flex: 2,
+    color: 'white',
+    borderRadius: 2,
+    padding: 5,
+
   },
   closeButton: {
     color: "#fff",

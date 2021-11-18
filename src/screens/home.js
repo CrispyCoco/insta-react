@@ -40,7 +40,11 @@ import {db} from '../firebase/config'
 
 const styles = StyleSheet.create({
     home:{
-        flex:1
+        flex:1,
+        backgroundColor: 'rgb(12, 11, 14)',
+        color: 'white',
+        borderRadius: 2,
+        padding: 5,
     }
 })
 
