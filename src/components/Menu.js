@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator  } from "@react-navigation/bottom-tabs";
 const Drawer = createBottomTabNavigator();
@@ -66,9 +66,15 @@ class Menu extends Component {
       this.state.loaded?(      
       <NavigationContainer>
         {!this.state.loggedIn ? (
-          <Drawer.Navigator screenOptions={({route}) => ({
+          <Drawer.Navigator  screenOptions={({route}) => ({
             tabBarIcon: ({color}) => screenOptions(route, color),
-          })}>
+            headerShown: false,
+          })} tabBarOptions={{
+            activeBackgroundColor: 'rgb(12, 11, 14)',
+            inactiveBackgroundColor: 'black',
+            activeTintColor: 'rgb(223, 0, 231)',
+            // showLabel: false,
+          }}>
             <Drawer.Screen
               name="Register"
               component={() => (
@@ -91,7 +97,13 @@ class Menu extends Component {
         ) : (
           <Drawer.Navigator screenOptions={({route}) => ({
             tabBarIcon: ({color}) => screenOptions(route, color),
-          })}>
+            headerShown: false,
+          })} tabBarOptions={{
+            activeBackgroundColor: 'rgb(12, 11, 14)',
+            inactiveBackgroundColor: 'black',
+            activeTintColor: 'rgb(223, 0, 231)',
+            // showLabel: false,
+          }}>
             <Drawer.Screen name="Home" component={() => <Home />}/>
             <Drawer.Screen name="Add Post" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
             <Drawer.Screen name="Profile" component={() => <Profile user={this.state.user} logout={()=>this.logout()}/>} />
@@ -130,5 +142,9 @@ const screenOptions = (route, color) => {
   return <Icon name={iconName} color={color} size={24} />;
 };
 
-
+const styles = StyleSheet.create({
+  drawer:{
+    color: 'red'
+  }
+})
 export default Menu;
