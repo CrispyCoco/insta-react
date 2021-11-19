@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-const Drawer = createDrawerNavigator();
+import { createBottomTabNavigator  } from "@react-navigation/bottom-tabs";
+const Drawer = createBottomTabNavigator();
 import { auth, db } from "../firebase/config";
-
+import Icon from 'react-native-vector-icons/AntDesign'
+const iconHome = <Icon name="home" size={30} color='rgba(87, 84, 95, 0.445)'/>
 import Home from "../screens/home";
 import Register from "../screens/register";
 import Login from "../screens/login";
@@ -65,7 +66,9 @@ class Menu extends Component {
       this.state.loaded?(      
       <NavigationContainer>
         {!this.state.loggedIn ? (
-          <Drawer.Navigator>
+          <Drawer.Navigator screenOptions={({route}) => ({
+            tabBarIcon: ({color}) => screenOptions(route, color),
+          })}>
             <Drawer.Screen
               name="Register"
               component={() => (
@@ -86,10 +89,12 @@ class Menu extends Component {
             />
           </Drawer.Navigator>
         ) : (
-          <Drawer.Navigator>
-            <Drawer.Screen name="Home" component={() => <Home />} />
-            <Drawer.Screen name="Profile" component={() => <Profile user={this.state.user} logout={()=>this.logout()}/>} />
+          <Drawer.Navigator screenOptions={({route}) => ({
+            tabBarIcon: ({color}) => screenOptions(route, color),
+          })}>
+            <Drawer.Screen name="Home" component={() => <Home />}/>
             <Drawer.Screen name="Add Post" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
+            <Drawer.Screen name="Profile" component={() => <Profile user={this.state.user} logout={()=>this.logout()}/>} />
           </Drawer.Navigator>
         )}
       </NavigationContainer>):(
@@ -98,5 +103,32 @@ class Menu extends Component {
     );
   }
 }
+
+const screenOptions = (route, color) => {
+  let iconName;
+
+  switch (route.name) {
+    case 'Home':
+      iconName = 'home';
+      break;
+    case 'Profile':
+      iconName = 'user';
+      break;
+    case 'Add Post':
+      iconName = 'plus';
+      break;
+    case 'Register':
+      iconName= 'form'
+      break
+      case 'Login':
+      iconName= 'lock'
+      break
+    // default:
+    //   break;
+  }
+
+  return <Icon name={iconName} color={color} size={24} />;
+};
+
 
 export default Menu;

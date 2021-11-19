@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Text, TouchableOpacity, View, StyleSheet } from 'react-native'
 import {db} from '../firebase/config'
 import MyPost from '../components/MyPost'
 
@@ -32,7 +32,7 @@ import MyPost from '../components/MyPost'
 
     render() {
         return (
-            <View>
+            <View style={styles.view}>
                 <Text> {this.props.user.email} </Text>
                 <Text> {this.props.user.displayName} </Text>
                 <Text> {this.props.user.metadata.lastSignInTime} </Text>
@@ -53,5 +53,13 @@ import MyPost from '../components/MyPost'
         )
     }
 }
-
+const styles = StyleSheet.create({
+    view:{
+        backgroundColor: 'rgb(12, 11, 14)',
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+})
 export default profile;
