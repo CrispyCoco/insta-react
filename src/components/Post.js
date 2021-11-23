@@ -123,11 +123,11 @@ class Post extends Component {
         <Text style={styles.text}>{this.state.likes} Likes </Text>
         {this.state.myLike ? (
           <TouchableOpacity onPress={() => this.unLike()}>
-            <Text style={styles.text}> Unlike </Text>
+            <Text style={styles.text}>Unlike </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => this.like()}>
-            <Text style={styles.text}> Like </Text>
+            <Text style={styles.text}>Like </Text>
           </TouchableOpacity>
         )}
 
@@ -152,7 +152,7 @@ class Post extends Component {
                 )}
               />
             ) : (
-              <Text style={styles.text}> No comments </Text>
+              <Text style={styles.text}>No comments </Text>
             )}
 
             <TextInput
@@ -204,7 +204,9 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   text:{
-    color: "rgba(87, 84, 95, 0.445)",
+    color: 'white',
+    padding: 4,
+    alignItems: "center"
   }
 
 });

@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     minHeight: "100vh",
     width:'100%',
+    color: "rgba(87, 84, 95, 0.445)",
   },
   search:{
     width:'90%',
@@ -116,6 +117,9 @@ const styles = StyleSheet.create({
     color: 'white',
     borderRadius: 2,
     padding: 5,
-  }
+  },
+  text: {
+    color: "rgba(87, 84, 95, 0.445)",
+  },
 });
 export default search;
