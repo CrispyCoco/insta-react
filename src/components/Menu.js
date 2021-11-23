@@ -11,6 +11,7 @@ import Register from "../screens/register";
 import Login from "../screens/login";
 import Profile from "../screens/profile";
 import AddPost from "../screens/addPost";
+import Search from "../screens/search";
 
 class Menu extends Component {
   constructor() {
@@ -105,8 +106,10 @@ class Menu extends Component {
             // showLabel: false,
           }}>
             <Drawer.Screen name="Home" component={() => <Home />}/>
+            <Drawer.Screen name="Search" component={() => <Search />}/>
             <Drawer.Screen name="Add Post" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
             <Drawer.Screen name="Profile" component={() => <Profile user={this.state.user} logout={()=>this.logout()}/>} />
+
           </Drawer.Navigator>
         )}
       </NavigationContainer>):(
@@ -132,8 +135,11 @@ const screenOptions = (route, color) => {
     case 'Register':
       iconName= 'form'
       break
-      case 'Login':
+    case 'Login':
       iconName= 'lock'
+      break
+    case 'Search':
+      iconName= 'lupe'
       break
     // default:
     //   break;

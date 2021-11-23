@@ -36,6 +36,7 @@ class addPost extends Component {
       .then(() => {
         this.setState({
           description: "",
+          url:"",
         });
         this.props.drawerProps.navigation.navigate("Home");
       });

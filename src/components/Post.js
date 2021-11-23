@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  FlatList
+  FlatList,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
@@ -74,38 +74,40 @@ class Post extends Component {
       });
   }
 
-  comment(){
-      let commentObject = {
-          createdAt: Date.now(),
-          owner: auth.currentUser.displayName,
-          comment: this.state.comment,
-      }
+  comment() {
+    let commentObject = {
+      createdAt: Date.now(),
+      owner: auth.currentUser.displayName,
+      comment: this.state.comment,
+    };
     db.collection("posts")
-    .doc(this.props.data.id)
-    .update({
-      comments: firebase.firestore.FieldValue.arrayUnion(
-        commentObject
-      ),
-    })
-    .then(() => {
-      this.setState({
-        comments: this.props.data.data.comments,
-        commented: true,
-        comment: ''
+      .doc(this.props.data.id)
+      .update({
+        comments: firebase.firestore.FieldValue.arrayUnion(commentObject),
+      })
+      .then(() => {
+        this.setState({
+          comments: this.props.data.data.comments,
+          commented: true,
+          comment: "",
+        });
       });
-    });
   }
 
-  viewComments(){
-      if(this.state.modal){
-          this.setState({
-              modal:false
-          })
-      }else{
-          this.setState({
-              modal:true
-          })
-      }
+  viewComments() {
+    if (this.state.modal) {
+      this.setState({
+        modal: false,
+      });
+    } else {
+      this.setState({
+        modal: true,
+      });
+    }
+  }
+
+  delete() {
+    db.collection("posts").doc(this.props.data.id).delete();
   }
 
   render() {
@@ -115,46 +117,44 @@ class Post extends Component {
         <Image
           style={styles.image}
           source={{ uri: this.props.data.data.picture }}
-          reziseMode='contain'
+          reziseMode="contain"
         />
-        <Text>{this.props.data.data.description}</Text>
-        <Text>{this.state.likes} Likes </Text>
+        <Text style={styles.text}>{this.props.data.data.description}</Text>
+        <Text style={styles.text}>{this.state.likes} Likes </Text>
         {this.state.myLike ? (
           <TouchableOpacity onPress={() => this.unLike()}>
-            <Text> Unlike </Text>
+            <Text style={styles.text}> Unlike </Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => this.like()}>
-            <Text > Like </Text>
+            <Text style={styles.text}> Like </Text>
           </TouchableOpacity>
         )}
-       
-        {this.state.modal ?(
-            <Modal 
+
+        {this.state.modal ? (
+          <Modal
             visible={this.state.modal}
             animtationType="slide"
             transparent={false}
           >
-        <TouchableOpacity onPress={()=> this.viewComments()}>
-            <Text style={styles.closeButton}>
-                X
-            </Text>
-        </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.viewComments()}>
+              <Text style={styles.closeButton}>X</Text>
+            </TouchableOpacity>
             {this.state.commented ? (
               <FlatList
                 data={this.state.comments}
                 keyExtractor={(comment) => comment.createdAt.toString()}
                 renderItem={({ item }) => (
-                  <Text>
+                  <Text style={styles.text}>
                     {" "}
                     {item.owner}: {item.comment}
                   </Text>
                 )}
               />
             ) : (
-              <Text> No comments </Text>
+              <Text style={styles.text}> No comments </Text>
             )}
-  
+
             <TextInput
               onChangeText={(text) => this.setState({ comment: text })}
               placeholder="Add comment..."
@@ -162,17 +162,22 @@ class Post extends Component {
               value={this.state.comment}
             />
             <TouchableOpacity onPress={() => this.comment()}>
-               <Text>Comment</Text>
+              <Text style={styles.text}>Comment</Text>
             </TouchableOpacity>
           </Modal>
-        ): (
-            <TouchableOpacity onPress={()=> this.viewComments()}>
-            <Text>
-                View comments
-            </Text>
-        </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => this.viewComments()}>
+            <Text style={styles.text}>View comments</Text>
+          </TouchableOpacity>
         )}
-        
+
+        {this.props.data.data.owner == auth.currentUser.displayName ? (
+          <TouchableOpacity onPress={() => this.delete()}>
+            <Text style={styles.text}>Delete</Text>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
       </View>
     );
   }
@@ -180,15 +185,12 @@ class Post extends Component {
 
 const styles = StyleSheet.create({
   image: {
-    height: '100px',
-    
+    height: "100px",
   },
   post: {
-    flex: 2,
-    color: 'white',
+    color: "white",
     borderRadius: 2,
     padding: 5,
-
   },
   closeButton: {
     color: "#fff",
@@ -201,6 +203,10 @@ const styles = StyleSheet.create({
   comment: {
     color: "#fff",
   },
+  text:{
+    color: "rgba(87, 84, 95, 0.445)",
+  }
+
 });
 
 export default Post;

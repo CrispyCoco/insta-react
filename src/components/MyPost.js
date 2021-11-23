@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Modal,
   TextInput,
-  FlatList
+  FlatList,
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
@@ -25,6 +25,10 @@ class Post extends Component {
     };
   }
 
+  delete() {
+    db.collection("posts").doc(this.props.data.id).delete();
+  }
+
   render() {
     return (
       <View style={styles.post}>
@@ -32,7 +36,10 @@ class Post extends Component {
           style={styles.image}
           source={{ uri: this.props.data.data.picture }}
         />
-        
+
+        <TouchableOpacity onPress={() => this.delete()}>
+          <Text>Delete</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -43,7 +50,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   post: {
-    width:"100%"
+    width: "100%",
   },
   closeButton: {
     color: "#fff",
