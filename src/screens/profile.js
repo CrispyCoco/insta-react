@@ -39,12 +39,12 @@ import MyPost from '../components/MyPost'
                 {this.state.loading?(
                     <Text></Text>
                 ):(
-                    <>
+                    <View style={styles.list}>
                     <Text> {this.state.posts.length} Posts </Text>
                     <FlatList data= {this.state.posts}
                 keyExtractor= {post=> post.id}
                 renderItem= {({item})=> <MyPost data={item}/>}/>
-                    </>
+                    </View>
                 )}
                 <TouchableOpacity onPress={()=>this.props.logout()}>
                     <Text>Log Out</Text>
@@ -56,10 +56,13 @@ import MyPost from '../components/MyPost'
 const styles = StyleSheet.create({
     view:{
         backgroundColor: 'rgb(12, 11, 14)',
-        flex: 1,
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
+        minHeight: "100vh"
       },
+      list:{
+          width: "100%"
+      }
 })
 export default profile;
