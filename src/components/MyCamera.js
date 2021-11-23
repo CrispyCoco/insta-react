@@ -64,12 +64,18 @@ class MyCamera extends Component {
                 type={Camera.Constants.Type.back}
                 ref={(reference) => (this.camera = reference)}
               />
-              <View style={styles.viewButtons}>
+              <View style={styles.viewButtonsPic}>
                 <TouchableOpacity
-                  style={styles.button}
+                  style={styles.buttonCancel}
+                  onPress={() => this.props.leave()}
+                >
+                  <Text style={styles.textButtonOp}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttonSave}
                   onPress={() => this.takePicture()}
                 >
-                  <Text style={styles.textButton}>Tomar foto</Text>
+                  <Text style={styles.textButton}>Take picture</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -111,6 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(223, 0, 231)",
     borderRadius: "10px",
     marginTop: 15,
+    outlineStyle: 'none'
   },
   textButton: {
     color: "white",
@@ -134,6 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: "10px",
     marginTop: 15,
     width: "45%",
+    outlineStyle: 'none'
 
   },
   buttonCancel: {
@@ -141,6 +149,7 @@ const styles = StyleSheet.create({
     borderRadius: "10px",
     marginTop: 15,
     width: "45%",
+    outlineStyle: 'none'
   },
   textButtonOp: {
     color: "rgb(223, 0, 231)",

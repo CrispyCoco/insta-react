@@ -48,11 +48,16 @@ class addPost extends Component {
     });
   }
 
+  leave(){
+    this.setState({
+      showCamera: false,
+    })
+  }
   render() {
     return (
       <View style={styles.viewCamera}>
         {this.state.showCamera ? (
-          <MyCamera uploadImage={(url) => this.uploadImage(url)} />
+          <MyCamera uploadImage={(url) => this.uploadImage(url)} leave={()=> this.leave()}/>
         ) : (
           <View style={styles.viewCamera}>
             {this.state.url.length == 0 ? (
@@ -82,15 +87,26 @@ class addPost extends Component {
             >
               <Text style={styles.textButton}> Add Post </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {this.state.url.length == 0 ?(
+              <TouchableOpacity
               style={
                 this.state.url.length == 0 ? styles.button : styles.buttonD
               }
-              disabled={this.state.url.length == 0 ? false : true}
               onPress={() => this.toggleCamera()}
             >
               <Text style={styles.textButton}> Take Picture </Text>
             </TouchableOpacity>
+            ):(
+              <TouchableOpacity
+              style={
+                styles.button
+              }
+              onPress={() => this.toggleCamera()}
+            >
+              <Text style={styles.textButton}> Re-take Picture </Text>
+            </TouchableOpacity>
+            )}
+            
           </View>
         )}
       </View>
@@ -107,6 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgb(223, 0, 231)",
     borderRadius: "10px",
     marginTop: 15,
+    outlineStyle: 'none'
   },
   viewCamera: {
     flex: 1,
@@ -125,6 +142,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     backgroundColor: "rgba(87, 84, 95, 0.445)",
     color: "white",
+    outlineStyle: 'none'
   },
   textButton: {
     color: "white",
@@ -141,6 +159,7 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     borderRadius: "10px",
     marginTop: 15,
+    outlineStyle: 'none'
   },
   title: {
     color: "rgba(87, 84, 95, 0.445)",

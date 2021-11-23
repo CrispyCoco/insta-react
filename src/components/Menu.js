@@ -4,8 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator  } from "@react-navigation/bottom-tabs";
 const Drawer = createBottomTabNavigator();
 import { auth, db } from "../firebase/config";
-import Icon from 'react-native-vector-icons/AntDesign'
-const iconHome = <Icon name="home" size={30} color='rgba(87, 84, 95, 0.445)'/>
+import Icon from 'react-native-vector-icons/FontAwesome'
 import Home from "../screens/home";
 import Register from "../screens/register";
 import Login from "../screens/login";
@@ -133,13 +132,13 @@ const screenOptions = (route, color) => {
       iconName = 'plus';
       break;
     case 'Register':
-      iconName= 'form'
+      iconName= 'file'
       break
     case 'Login':
       iconName= 'lock'
       break
     case 'Search':
-      iconName= 'lupe'
+      iconName= 'search'
       break
     // default:
     //   break;

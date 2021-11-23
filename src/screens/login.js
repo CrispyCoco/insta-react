@@ -52,12 +52,14 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     backgroundColor: 'rgba(87, 84, 95, 0.445)',
     color: 'white',
+    outlineStyle: 'none'
   },
   button:{
     width: '80%',
     backgroundColor: 'rgb(223, 0, 231)',
     borderRadius: '10px',
-    marginTop: 15
+    marginTop: 15,
+    outlineStyle: 'none'
   },
   textButton:{
     color: 'white',

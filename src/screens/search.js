@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     backgroundColor: 'rgba(87, 84, 95, 0.445)',
     color: 'white',
+    outlineStyle: 'none'
   },
 });
 export default search;
