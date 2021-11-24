@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
-
 class Post extends Component {
   constructor(props) {
     super(props);
@@ -136,6 +135,7 @@ class Post extends Component {
         <Text style={styles.text}>
           {this.state.likes} {this.state.likes == 1 ? "Like" : "Likes"}{" "}
         </Text>
+        <Text>Creation date: {this.props.data.createdAt}</Text>
         {this.state.myLike ? (
           <TouchableOpacity onPress={() => this.unLike()}>
             <Text style={styles.text}>Unlike </Text>

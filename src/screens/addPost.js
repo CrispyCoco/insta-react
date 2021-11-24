@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import MyCamera from "../components/MyCamera";
 import { auth, db } from "../firebase/config";
+import moment from "moment";
 class addPost extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +31,7 @@ class addPost extends Component {
       .add({
         owner: auth.currentUser.displayName,
         description: this.state.description,
-        createdAt: Date.now(),
+        createdAt: moment().format('MMMM Do YYYY, h:mm:ss a'),
         picture: this.state.url,
       })
       .then(() => {
