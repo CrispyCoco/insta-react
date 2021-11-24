@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   text: {
-    color: "rgba(87, 84, 95, 0.445)",
+    color: "white",
   },
   picture: {
     height: 200,
