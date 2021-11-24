@@ -36,12 +36,12 @@ class Menu extends Component {
       });
     });
   }
-  register(email, pass, username) {
+  register(email, pass, username, url) {
     auth
       .createUserWithEmailAndPassword(email, pass)
       .then(() => {
         console.log("Registered");
-        auth.currentUser.updateProfile({ displayName: username }).then(() => {
+        auth.currentUser.updateProfile({ displayName: username, photoURL: url }).then(() => {
           console.log(auth.currentUser.displayName);
         });
       })
@@ -96,8 +96,8 @@ class Menu extends Component {
               name="Register"
               component={() => (
                 <Register
-                  register={(email, password, username) =>
-                    this.register(email, password, username)
+                  register={(email, password, username, url) =>
+                    this.register(email, password, username, url)
                   }
                   error = {this.state.error}
                 />
