@@ -27,6 +27,9 @@ class login extends Component {
           value={this.state.password}
           secureTextEntry={true}
         />
+        <Text style = {styles.textError}>
+          {this.props.error}
+        </Text>
         <TouchableOpacity  style={
             this.state.email.length == 0 || this.state.password.length < 6 
                   ? styles.buttonD
@@ -83,6 +86,9 @@ const styles = StyleSheet.create({
     borderRadius: "10px",
     marginTop: 15,
     outlineStyle: 'none'
+  },
+  textError: {
+    color: 'red',
   }
 })
 export default login;

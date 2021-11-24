@@ -22,6 +22,7 @@ class Post extends Component {
       comment: "",
       comments: "",
       commented: false,
+      alert: false,
     };
   }
 
@@ -110,6 +111,18 @@ class Post extends Component {
     db.collection("posts").doc(this.props.data.id).delete();
   }
 
+  showAlert() {
+    if (this.state.alert) {
+      this.setState({
+        alert: false,
+      });
+    } else {
+      this.setState({
+        alert: true,
+      });
+    }
+  }
+
   render() {
     return (
       <View style={styles.post}>
@@ -120,7 +133,9 @@ class Post extends Component {
           reziseMode="contain"
         />
         <Text style={styles.text}>{this.props.data.data.description}</Text>
-        <Text style={styles.text}>{this.state.likes} {this.state.likes == 1 ? "Like":"Likes"} </Text>
+        <Text style={styles.text}>
+          {this.state.likes} {this.state.likes == 1 ? "Like" : "Likes"}{" "}
+        </Text>
         {this.state.myLike ? (
           <TouchableOpacity onPress={() => this.unLike()}>
             <Text style={styles.text}>Unlike </Text>
@@ -152,40 +167,60 @@ class Post extends Component {
                 )}
               />
             ) : (
-              <Text style={styles.text}>No comments </Text>
+              <Text style={styles.text}>No comments</Text>
             )}
 
             <TextInput
-            style = {styles.input}
+              style={styles.input}
               onChangeText={(text) => this.setState({ comment: text })}
               placeholder="Add comment..."
               keyboardType="default"
               value={this.state.comment}
             />
-            <TouchableOpacity style={
-            this.state.comment.length == 0 
-                  ? styles.buttonD
-                  : styles.button
+            <TouchableOpacity
+              style={
+                this.state.comment.length == 0 ? styles.buttonD : styles.button
               }
-        disabled={
-          this.state.comment.length == 0 
-            ? true
-            : false
-        }
-            onPress={() => this.comment()}>
+              disabled={this.state.comment.length == 0 ? true : false}
+              onPress={() => this.comment()}
+            >
               <Text style={styles.textButton}>Comment</Text>
             </TouchableOpacity>
           </Modal>
         ) : (
           <TouchableOpacity onPress={() => this.viewComments()}>
-            <Text style={styles.text}>View comments</Text>
+            <Text style={styles.text}>
+              {" "}
+              {this.state.commented
+                ? `View ${this.state.comments.length > 1 ? "all" : ""} ${
+                    this.state.comments.length
+                  } ${this.state.comments.length > 1 ? "comments" : "comment"} `
+                : "Press to comment"}{" "}
+            </Text>
           </TouchableOpacity>
         )}
 
         {this.props.data.data.owner == auth.currentUser.displayName ? (
-          <TouchableOpacity onPress={() => this.delete()}>
-            <Text style={styles.text}>Delete</Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity onPress={() => this.showAlert()}>
+              <Text style={styles.text}>Delete</Text>
+            </TouchableOpacity>
+            {this.state.alert ? (
+              <Modal
+              visible={this.state.modal}
+              animtationType="slide"
+              transparent={false}
+              >
+                <Text> Are you sure you want to delete this post? </Text>
+                <TouchableOpacity onPress={() => this.showAlert()}>
+                  <Text style={styles.text}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.delete()}>
+                  <Text style={styles.text}>Accept</Text>
+                </TouchableOpacity>
+              </Modal>
+            ) : null}
+          </>
         ) : (
           <></>
         )}
@@ -214,22 +249,22 @@ const styles = StyleSheet.create({
   comment: {
     color: "#fff",
   },
-  text:{
-    color: 'white',
+  text: {
+    color: "white",
     padding: 4,
-    alignItems: "center"
+    alignItems: "center",
   },
-  button:{
-    width: '80%',
-    backgroundColor: 'rgb(223, 0, 231)',
-    borderRadius: '10px',
+  button: {
+    width: "80%",
+    backgroundColor: "rgb(223, 0, 231)",
+    borderRadius: "10px",
     marginTop: 15,
-    outlineStyle: 'none'
+    outlineStyle: "none",
   },
-  textButton:{
-    color: 'white',
-    width: '100%',
-    textAlign: 'center',
+  textButton: {
+    color: "white",
+    width: "100%",
+    textAlign: "center",
     paddingVertical: 10,
   },
   buttonD: {
@@ -237,19 +272,20 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     borderRadius: "10px",
     marginTop: 15,
-    outlineStyle: 'none'
+    outlineStyle: "none",
   },
-  input:{
-    width: '80%',
-    border: '1px solid black',
-    borderRadius: '10px',
+  input: {
+    width: "80%",
+    border: "1px solid black",
+    borderRadius: "10px",
     paddingHorizontal: 8,
-    paddingVertical: 5, 
+    paddingVertical: 5,
     marginVertical: 4,
-    backgroundColor: 'rgba(87, 84, 95, 0.445)',
-    color: 'white',
-    outlineStyle: 'none'
-  }
+    backgroundColor: "rgba(87, 84, 95, 0.445)",
+    color: "white",
+    outlineStyle: "none",
+  },
+
 });
 
 export default Post;

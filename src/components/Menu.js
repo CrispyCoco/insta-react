@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator  } from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Drawer = createBottomTabNavigator();
 import { auth, db } from "../firebase/config";
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from "react-native-vector-icons/FontAwesome";
 import Home from "../screens/home";
 import Register from "../screens/register";
 import Login from "../screens/login";
@@ -18,7 +18,8 @@ class Menu extends Component {
     this.state = {
       user: null,
       loggedIn: false,
-      loaded: false
+      loaded: false,
+      error: "",
     };
   }
 
@@ -31,26 +32,40 @@ class Menu extends Component {
         });
       }
       this.setState({
-        loaded: true
-      })
+        loaded: true,
+      });
     });
   }
   register(email, pass, username) {
-    auth.createUserWithEmailAndPassword(email, pass).then(() => {
-      console.log("Registered");
-      auth.currentUser.updateProfile({ displayName: username }).then(() => {
-        console.log(auth.currentUser.displayName);
+    auth
+      .createUserWithEmailAndPassword(email, pass)
+      .then(() => {
+        console.log("Registered");
+        auth.currentUser.updateProfile({ displayName: username }).then(() => {
+          console.log(auth.currentUser.displayName);
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          error: error.message,
+        });
       });
-    });
   }
 
   login(email, pass) {
-    auth.signInWithEmailAndPassword(email, pass).then((response) => {
-      this.setState({
-        loggedIn: true,
-        user: response.user,
+    auth
+      .signInWithEmailAndPassword(email, pass)
+      .then((response) => {
+        this.setState({
+          loggedIn: true,
+          user: response.user,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          error: error.message,
+        });
       });
-    });
   }
 
   logout() {
@@ -62,19 +77,21 @@ class Menu extends Component {
     });
   }
   render() {
-    return (
-      this.state.loaded?(      
+    return this.state.loaded ? (
       <NavigationContainer>
         {!this.state.loggedIn ? (
-          <Drawer.Navigator  screenOptions={({route}) => ({
-            tabBarIcon: ({color}) => screenOptions(route, color),
-            headerShown: false,
-          })} tabBarOptions={{
-            activeBackgroundColor: 'rgb(12, 11, 14)',
-            inactiveBackgroundColor: 'black',
-            activeTintColor: 'rgb(223, 0, 231)',
-            // showLabel: false,
-          }}>
+          <Drawer.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ color }) => screenOptions(route, color),
+              headerShown: false,
+            })}
+            tabBarOptions={{
+              activeBackgroundColor: "rgb(12, 11, 14)",
+              inactiveBackgroundColor: "black",
+              activeTintColor: "rgb(223, 0, 231)",
+              // showLabel: false,
+            }}
+          >
             <Drawer.Screen
               name="Register"
               component={() => (
@@ -82,6 +99,7 @@ class Menu extends Component {
                   register={(email, password, username) =>
                     this.register(email, password, username)
                   }
+                  error = {this.state.error}
                 />
               )}
             />
@@ -90,30 +108,41 @@ class Menu extends Component {
               component={() => (
                 <Login
                   login={(email, password) => this.login(email, password)}
+                  error = {this.state.error}
                 />
               )}
             />
           </Drawer.Navigator>
         ) : (
-          <Drawer.Navigator screenOptions={({route}) => ({
-            tabBarIcon: ({color}) => screenOptions(route, color),
-            headerShown: false,
-          })} tabBarOptions={{
-            activeBackgroundColor: 'rgb(12, 11, 14)',
-            inactiveBackgroundColor: 'black',
-            activeTintColor: 'rgb(223, 0, 231)',
-            // showLabel: false,
-          }}>
-            <Drawer.Screen name="Home" component={() => <Home />}/>
-            <Drawer.Screen name="Search" component={() => <Search />}/>
-            <Drawer.Screen name="Add Post" component={(drawerProps) => <AddPost drawerProps={drawerProps} />} />
-            <Drawer.Screen name="Profile" component={() => <Profile user={this.state.user} logout={()=>this.logout()}/>} />
-
+          <Drawer.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ color }) => screenOptions(route, color),
+              headerShown: false,
+            })}
+            tabBarOptions={{
+              activeBackgroundColor: "rgb(12, 11, 14)",
+              inactiveBackgroundColor: "black",
+              activeTintColor: "rgb(223, 0, 231)",
+              // showLabel: false,
+            }}
+          >
+            <Drawer.Screen name="Home" component={() => <Home />} />
+            <Drawer.Screen name="Search" component={() => <Search />} />
+            <Drawer.Screen
+              name="Add Post"
+              component={(drawerProps) => <AddPost drawerProps={drawerProps} />}
+            />
+            <Drawer.Screen
+              name="Profile"
+              component={() => (
+                <Profile user={this.state.user} logout={() => this.logout()} />
+              )}
+            />
           </Drawer.Navigator>
         )}
-      </NavigationContainer>):(
-        <Text></Text>
-      )
+      </NavigationContainer>
+    ) : (
+      <Text></Text>
     );
   }
 }
@@ -122,24 +151,24 @@ const screenOptions = (route, color) => {
   let iconName;
 
   switch (route.name) {
-    case 'Home':
-      iconName = 'home';
+    case "Home":
+      iconName = "home";
       break;
-    case 'Profile':
-      iconName = 'user';
+    case "Profile":
+      iconName = "user";
       break;
-    case 'Add Post':
-      iconName = 'plus';
+    case "Add Post":
+      iconName = "plus";
       break;
-    case 'Register':
-      iconName= 'file'
-      break
-    case 'Login':
-      iconName= 'lock'
-      break
-    case 'Search':
-      iconName= 'search'
-      break
+    case "Register":
+      iconName = "file";
+      break;
+    case "Login":
+      iconName = "lock";
+      break;
+    case "Search":
+      iconName = "search";
+      break;
     // default:
     //   break;
   }
@@ -148,8 +177,8 @@ const screenOptions = (route, color) => {
 };
 
 const styles = StyleSheet.create({
-  drawer:{
-    color: 'red'
-  }
-})
+  drawer: {
+    color: "red",
+  },
+});
 export default Menu;

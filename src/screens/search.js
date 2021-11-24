@@ -57,11 +57,18 @@ class search extends Component {
         </View>
 
         <View styles={styles.list}>
-        <FlatList 
-                data= {this.state.posts}
-                keyExtractor= {post=> post.id}
-                renderItem= {({item})=> <Post data={item}/>}
-        />
+          {this.state.posts?(
+            this.state.posts.length>0?(
+              <FlatList 
+              data= {this.state.posts}
+              keyExtractor= {post=> post.id}
+              renderItem= {({item})=> <Post data={item}/>}
+              /> 
+            ):(
+              <Text style={styles.title}>No posts where found</Text>
+            )
+          ):(null)}
+
         </View>
 
 
@@ -120,6 +127,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "rgba(87, 84, 95, 0.445)",
+  },
+  title: {
+    color: "rgba(87, 84, 95, 0.445)",
+    marginTop: 30,
+    fontSize: 20,
   },
 });
 export default search;
