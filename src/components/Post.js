@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { auth, db } from "../firebase/config";
 import firebase from "firebase";
+import Icon from "react-native-vector-icons/FontAwesome";
 class Post extends Component {
   constructor(props) {
     super(props);
@@ -138,11 +139,11 @@ class Post extends Component {
         <Text>Creation date: {this.props.data.createdAt}</Text>
         {this.state.myLike ? (
           <TouchableOpacity onPress={() => this.unLike()}>
-            <Text style={styles.text}>Unlike </Text>
+            <Icon name="heart" color="red" size={25} style={styles.icon}/>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => this.like()}>
-            <Text style={styles.text}>Like </Text>
+            <Icon name="heart" color="gray" size={25} style={styles.icon}/>
           </TouchableOpacity>
         )}
 

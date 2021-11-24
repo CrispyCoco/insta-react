@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
+  Image
 } from "react-native";
 import { db } from "../firebase/config";
 import MyPost from "../components/MyPost";
@@ -39,6 +40,7 @@ class profile extends Component {
   render() {
     return (
       <View style={styles.view}>
+        <Image style={styles.picture} source={{ uri: this.props.user.photoURL }} />
         <Text style={styles.text}> {this.props.user.email} </Text>
         <Text style={styles.text}> {this.props.user.displayName} </Text>
         <Text style={styles.text}>
@@ -78,5 +80,10 @@ const styles = StyleSheet.create({
   text: {
     color: "rgba(87, 84, 95, 0.445)",
   },
+  picture: {
+    height: 200,
+    width: 200,
+    borderRadius:'50%'
+  }
 });
 export default profile;

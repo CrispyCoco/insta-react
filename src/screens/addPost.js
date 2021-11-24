@@ -30,6 +30,7 @@ class addPost extends Component {
     db.collection("posts")
       .add({
         owner: auth.currentUser.displayName,
+        ownerPic: auth.currentUser.photoURL,
         description: this.state.description,
         createdAt: moment().format('MMMM Do YYYY, h:mm:ss a'),
         picture: this.state.url,
