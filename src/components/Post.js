@@ -120,7 +120,7 @@ class Post extends Component {
           reziseMode="contain"
         />
         <Text style={styles.text}>{this.props.data.data.description}</Text>
-        <Text style={styles.text}>{this.state.likes} Likes </Text>
+        <Text style={styles.text}>{this.state.likes} {this.state.likes == 1 ? "Like":"Likes"} </Text>
         {this.state.myLike ? (
           <TouchableOpacity onPress={() => this.unLike()}>
             <Text style={styles.text}>Unlike </Text>
@@ -156,13 +156,24 @@ class Post extends Component {
             )}
 
             <TextInput
+            style = {styles.input}
               onChangeText={(text) => this.setState({ comment: text })}
               placeholder="Add comment..."
               keyboardType="default"
               value={this.state.comment}
             />
-            <TouchableOpacity onPress={() => this.comment()}>
-              <Text style={styles.text}>Comment</Text>
+            <TouchableOpacity style={
+            this.state.comment.length == 0 
+                  ? styles.buttonD
+                  : styles.button
+              }
+        disabled={
+          this.state.comment.length == 0 
+            ? true
+            : false
+        }
+            onPress={() => this.comment()}>
+              <Text style={styles.textButton}>Comment</Text>
             </TouchableOpacity>
           </Modal>
         ) : (
@@ -207,8 +218,38 @@ const styles = StyleSheet.create({
     color: 'white',
     padding: 4,
     alignItems: "center"
+  },
+  button:{
+    width: '80%',
+    backgroundColor: 'rgb(223, 0, 231)',
+    borderRadius: '10px',
+    marginTop: 15,
+    outlineStyle: 'none'
+  },
+  textButton:{
+    color: 'white',
+    width: '100%',
+    textAlign: 'center',
+    paddingVertical: 10,
+  },
+  buttonD: {
+    width: "80%",
+    backgroundColor: "gray",
+    borderRadius: "10px",
+    marginTop: 15,
+    outlineStyle: 'none'
+  },
+  input:{
+    width: '80%',
+    border: '1px solid black',
+    borderRadius: '10px',
+    paddingHorizontal: 8,
+    paddingVertical: 5, 
+    marginVertical: 4,
+    backgroundColor: 'rgba(87, 84, 95, 0.445)',
+    color: 'white',
+    outlineStyle: 'none'
   }
-
 });
 
 export default Post;
