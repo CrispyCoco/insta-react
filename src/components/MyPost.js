@@ -16,12 +16,7 @@ class Post extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      likes: 0,
-      myLike: false,
-      modal: false,
-      comment: "",
-      comments: "",
-      commented: false,
+      alert: false,
     };
   }
 
@@ -29,6 +24,17 @@ class Post extends Component {
     db.collection("posts").doc(this.props.data.id).delete();
   }
 
+  showAlert() {
+    if (this.state.alert) {
+      this.setState({
+        alert: false,
+      });
+    } else {
+      this.setState({
+        alert: true,
+      });
+    }
+  }
   render() {
     return (
       <View style={styles.post}>
@@ -37,9 +43,30 @@ class Post extends Component {
           source={{ uri: this.props.data.data.picture }}
         />
 
-        <TouchableOpacity onPress={() => this.delete()}>
-          <Text>Delete</Text>
-        </TouchableOpacity>
+        {this.props.data.data.owner == auth.currentUser.displayName ? (
+          <>
+            <TouchableOpacity onPress={() => this.showAlert()}>
+              <Text style={styles.text}>Delete</Text>
+            </TouchableOpacity>
+            {this.state.alert ? (
+              <Modal
+                visible={this.state.modal}
+                animtationType="slide"
+                transparent={false}
+              >
+                <Text> Are you sure you want to delete this post? </Text>
+                <TouchableOpacity onPress={() => this.showAlert()}>
+                  <Text style={styles.text}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.delete()}>
+                  <Text style={styles.text}>Accept</Text>
+                </TouchableOpacity>
+              </Modal>
+            ) : null}
+          </>
+        ) : (
+          <></>
+        )}
       </View>
     );
   }

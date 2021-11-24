@@ -232,12 +232,16 @@ class Post extends Component {
 
 const styles = StyleSheet.create({
   image: {
-    height: "100px",
+    height: 250,
+    width: 250,
+
   },
   post: {
     color: "white",
     borderRadius: 2,
     padding: 5,
+    backgroundColor: 'rgb(87, 84, 95)',
+    marginVertical: 10
   },
   closeButton: {
     color: "#fff",
