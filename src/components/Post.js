@@ -77,7 +77,7 @@ class Post extends Component {
 
   comment() {
     let commentObject = {
-      createdAt: moment().format('MMMM Do YYYY, h:mm:ss a'),
+      createdAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
       owner: auth.currentUser.displayName,
       comment: this.state.comment,
     };
@@ -232,13 +232,21 @@ class Post extends Component {
                   animtationType="slide"
                   transparent={false}
                 >
-                  <Text> Are you sure you want to delete this post? </Text>
-                  <TouchableOpacity onPress={() => this.showAlert()}>
-                    <Text style={styles.text}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.delete()}>
-                    <Text style={styles.text}>Accept</Text>
-                  </TouchableOpacity>
+                  <Text style={styles.textButton}> Are you sure you want to delete this post? </Text>
+                  <View style={styles.flexContainer}>
+                    <TouchableOpacity
+                      onPress={() => this.showAlert()}
+                      style={styles.buttonCancel}
+                    >
+                      <Text style={styles.textButtonOp}>Cancel</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => this.delete()}
+                      style={styles.buttonAccept}
+                    >
+                      <Text style={styles.textButton}>Accept</Text>
+                    </TouchableOpacity>
+                  </View>
                 </Modal>
               ) : null}
             </>
@@ -271,7 +279,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "90%",
   },
-  trash:{
+  trash: {
     // marginRight:20
   },
   userInfo: {
@@ -311,6 +319,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-start",
+    
   },
   viewComments: {
     color: "rgba(87, 84, 95, 0.8)",
@@ -365,6 +374,28 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     backgroundColor: "rgba(87, 84, 95, 0.445)",
     color: "white",
+    outlineStyle: "none",
+  },
+  buttonCancel: {
+    backgroundColor: "white",
+    borderRadius: "10px",
+    marginTop: 15,
+    marginBottom: 8,
+    width: "45%",
+    outlineStyle: "none",
+  },
+  textButtonOp: {
+    color: "rgb(223, 0, 231)",
+    width: "100%",
+    textAlign: "center",
+    paddingVertical: 10,
+  },
+  buttonAccept: {
+    backgroundColor: "rgb(223, 0, 231)",
+    borderRadius: "10px",
+    marginTop: 15,
+    marginBottom: 8,
+    width: "45%",
     outlineStyle: "none",
   },
 });
