@@ -77,7 +77,7 @@ class Post extends Component {
 
   comment() {
     let commentObject = {
-      createdAt: Date.now(),
+      createdAt: moment().format('MMMM Do YYYY, h:mm:ss a'),
       owner: auth.currentUser.displayName,
       comment: this.state.comment,
     };
@@ -126,122 +126,199 @@ class Post extends Component {
   render() {
     return (
       <View style={styles.post}>
-        <Text>{this.props.data.data.owner}</Text>
+        <View style={styles.header}>
+          <View style={styles.userInfo}>
+            <Image
+              style={styles.userImg}
+              source={{ uri: this.props.data.data.ownerPic }}
+              reziseMode="contain"
+            />
+            <Text style={styles.username}>@{this.props.data.data.owner}</Text>
+          </View>
+          {this.props.data.data.owner == auth.currentUser.displayName ? (
+            <TouchableOpacity onPress={() => this.showAlert()}>
+              <Icon name="trash" color="red" size={15} style={styles.trash} />
+            </TouchableOpacity>
+          ) : null}
+        </View>
         <Image
           style={styles.image}
           source={{ uri: this.props.data.data.picture }}
           reziseMode="contain"
         />
-        <Text style={styles.text}>{this.props.data.data.description}</Text>
-        <Text style={styles.text}>
-          {this.state.likes} {this.state.likes == 1 ? "Like" : "Likes"}{" "}
-        </Text>
-        <Text>Creation date: {this.props.data.createdAt}</Text>
-        {this.state.myLike ? (
-          <TouchableOpacity onPress={() => this.unLike()}>
-            <Icon name="heart" color="red" size={25} style={styles.icon}/>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => this.like()}>
-            <Icon name="heart" color="gray" size={25} style={styles.icon}/>
-          </TouchableOpacity>
-        )}
-
-        {this.state.modal ? (
-          <Modal
-            visible={this.state.modal}
-            animtationType="slide"
-            transparent={false}
-          >
-            <TouchableOpacity onPress={() => this.viewComments()}>
-              <Text style={styles.closeButton}>X</Text>
-            </TouchableOpacity>
-            {this.state.commented ? (
-              <FlatList
-                data={this.state.comments}
-                keyExtractor={(comment) => comment.createdAt.toString()}
-                renderItem={({ item }) => (
-                  <Text style={styles.text}>
-                    {" "}
-                    {item.owner}: {item.comment}
-                  </Text>
-                )}
-              />
+        <View style={styles.infoContainer}>
+          <View style={styles.flexContainer}>
+            {this.state.myLike ? (
+              <TouchableOpacity onPress={() => this.unLike()}>
+                <Icon name="heart" color="red" size={15} style={styles.icon} />
+              </TouchableOpacity>
             ) : (
-              <Text style={styles.text}>No comments</Text>
+              <TouchableOpacity onPress={() => this.like()}>
+                <Icon name="heart" color="gray" size={15} style={styles.icon} />
+              </TouchableOpacity>
             )}
-
-            <TextInput
-              style={styles.input}
-              onChangeText={(text) => this.setState({ comment: text })}
-              placeholder="Add comment..."
-              keyboardType="default"
-              value={this.state.comment}
-            />
-            <TouchableOpacity
-              style={
-                this.state.comment.length == 0 ? styles.buttonD : styles.button
-              }
-              disabled={this.state.comment.length == 0 ? true : false}
-              onPress={() => this.comment()}
-            >
-              <Text style={styles.textButton}>Comment</Text>
-            </TouchableOpacity>
-          </Modal>
-        ) : (
-          <TouchableOpacity onPress={() => this.viewComments()}>
             <Text style={styles.text}>
-              {" "}
-              {this.state.commented
-                ? `View ${this.state.comments.length > 1 ? "all" : ""} ${
-                    this.state.comments.length
-                  } ${this.state.comments.length > 1 ? "comments" : "comment"} `
-                : "Press to comment"}{" "}
+              {this.state.likes} {this.state.likes == 1 ? "Like" : "Likes"}{" "}
             </Text>
-          </TouchableOpacity>
-        )}
+          </View>
+          <View style={styles.flexContainer}>
+            <Text style={styles.username}>{this.props.data.data.owner}</Text>
+            <Text style={styles.text}>{this.props.data.data.description}</Text>
+          </View>
 
-        {this.props.data.data.owner == auth.currentUser.displayName ? (
-          <>
-            <TouchableOpacity onPress={() => this.showAlert()}>
-              <Text style={styles.text}>Delete</Text>
-            </TouchableOpacity>
-            {this.state.alert ? (
-              <Modal
+          {this.state.modal ? (
+            <Modal
               visible={this.state.modal}
-              animtationType="slide"
+              animationType="fade"
               transparent={false}
+            >
+              <TouchableOpacity onPress={() => this.viewComments()}>
+                <Text style={styles.closeButton}>X</Text>
+              </TouchableOpacity>
+              {this.state.commented ? (
+                <FlatList
+                  data={this.state.comments}
+                  keyExtractor={(comment) => comment.createdAt.toString()}
+                  renderItem={({ item }) => (
+                    <Text style={styles.text}>
+                      {" "}
+                      {item.owner}: {item.comment}
+                    </Text>
+                  )}
+                />
+              ) : (
+                <Text style={styles.text}>No comments</Text>
+              )}
+
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => this.setState({ comment: text })}
+                placeholder="Add comment..."
+                keyboardType="default"
+                value={this.state.comment}
+              />
+              <TouchableOpacity
+                style={
+                  this.state.comment.length == 0
+                    ? styles.buttonD
+                    : styles.button
+                }
+                disabled={this.state.comment.length == 0 ? true : false}
+                onPress={() => this.comment()}
               >
-                <Text> Are you sure you want to delete this post? </Text>
-                <TouchableOpacity onPress={() => this.showAlert()}>
-                  <Text style={styles.text}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.delete()}>
-                  <Text style={styles.text}>Accept</Text>
-                </TouchableOpacity>
-              </Modal>
-            ) : null}
-          </>
-        ) : (
-          <></>
-        )}
+                <Text style={styles.textButton}>Comment</Text>
+              </TouchableOpacity>
+            </Modal>
+          ) : (
+            <TouchableOpacity onPress={() => this.viewComments()}>
+              <Text style={styles.viewComments}>
+                {" "}
+                {this.state.commented
+                  ? `View ${this.state.comments.length > 1 ? "all" : ""} ${
+                      this.state.comments.length
+                    } ${
+                      this.state.comments.length > 1 ? "comments" : "comment"
+                    } `
+                  : "Press to comment"}{" "}
+              </Text>
+            </TouchableOpacity>
+          )}
+
+          {this.props.data.data.owner == auth.currentUser.displayName ? (
+            <>
+              {this.state.alert ? (
+                <Modal
+                  visible={this.state.modal}
+                  animtationType="slide"
+                  transparent={false}
+                >
+                  <Text> Are you sure you want to delete this post? </Text>
+                  <TouchableOpacity onPress={() => this.showAlert()}>
+                    <Text style={styles.text}>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.delete()}>
+                    <Text style={styles.text}>Accept</Text>
+                  </TouchableOpacity>
+                </Modal>
+              ) : null}
+            </>
+          ) : (
+            <></>
+          )}
+          <Text style={styles.irrelevant}>
+            Creation date: {this.props.data.data.createdAt}
+          </Text>
+        </View>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  post: {
+    color: "white",
+    border: "solid 1px rgba(128, 128, 128, 0.2)",
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    padding: 5,
+    display: "flex",
+    alignItems: "center",
+  },
+  header: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    width: "90%",
+  },
+  trash:{
+    // marginRight:20
+  },
+  userInfo: {
+    // border: 'solid 1px rgba(128, 128, 128, 0.1)',
+    borderTopWidth: 0,
+    marginBottom: 13,
+    marginTop: 7,
+    padding: 5,
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(128, 128, 128, 0.2)",
+  },
+  userImg: {
+    height: 30,
+    width: 30,
+    borderRadius: "50%",
+  },
+  username: {
+    color: "white",
+    fontWeight: "bold",
+    marginTop: 0,
+    marginLeft: 5,
+  },
   image: {
     height: 250,
     width: 250,
-
   },
-  post: {
-    color: "white",
-    borderRadius: 2,
-    padding: 5,
-    backgroundColor: 'rgb(87, 84, 95)',
-    marginVertical: 10
+  infoContainer: {
+    width: "90%",
+    display: "flex",
+    marginTop: 7,
+  },
+  flexContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  viewComments: {
+    color: "rgba(87, 84, 95, 0.8)",
+  },
+  irrelevant: {
+    fontSize: 12,
+    color: "rgba(87, 84, 95, 0.445)",
+    marginTop: 7,
   },
   closeButton: {
     color: "#fff",
@@ -256,7 +333,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    padding: 4,
+    paddingLeft: 4,
     alignItems: "center",
   },
   button: {
@@ -290,7 +367,6 @@ const styles = StyleSheet.create({
     color: "white",
     outlineStyle: "none",
   },
-
 });
 
 export default Post;

@@ -42,7 +42,7 @@ class search extends Component {
   render() {
     console.log(this.state.posts);
     return (
-      <View style={styles.view}>
+      <View style={styles.list}>
         <View style={styles.search}>
         <TextInput
           style={styles.input}
@@ -56,7 +56,7 @@ class search extends Component {
         </TouchableOpacity>
         </View>
 
-        <View styles={styles.list}>
+        {/* <View styles={styles.list}> */}
           {this.state.posts?(
             this.state.posts.length>0?(
               <FlatList 
@@ -69,7 +69,7 @@ class search extends Component {
             )
           ):(null)}
 
-        </View>
+        {/* </View> */}
 
 
       </View>
@@ -87,12 +87,13 @@ const styles = StyleSheet.create({
     color: "rgba(87, 84, 95, 0.445)",
   },
   search:{
-    width:'90%',
+    width:'100%',
     display: "flex",
     flexDirection: "row",
-    marginTop: 15,
+    paddingTop: 15,
     alignItems: "center",
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
+    paddingBottom: 15,
   },
   input:{
     width: '80%',
@@ -120,10 +121,10 @@ const styles = StyleSheet.create({
   },
   list: {
     flex:1,
-    // backgroundColor: 'rgb(12, 11, 14)',
-    color: 'white',
-    borderRadius: 2,
-    padding: 5,
+        backgroundColor: 'rgb(12, 11, 14)',
+        // color: 'white',
+        borderRadius: 2,
+        padding: 5,
   },
   text: {
     color: "rgba(87, 84, 95, 0.445)",

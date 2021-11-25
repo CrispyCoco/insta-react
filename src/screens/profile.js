@@ -5,10 +5,11 @@ import {
   TouchableOpacity,
   View,
   StyleSheet,
-  Image
+  Image,
 } from "react-native";
 import { db } from "../firebase/config";
-import MyPost from "../components/MyPost";
+import Post from "../components/Post";
+import Icon from "react-native-vector-icons/AntDesign";
 
 class profile extends Component {
   constructor(props) {
@@ -39,51 +40,96 @@ class profile extends Component {
 
   render() {
     return (
-      <View style={styles.view}>
-        <Image style={styles.picture} source={{ uri: this.props.user.photoURL }} />
-        <Text style={styles.text}> {this.props.user.email} </Text>
-        <Text style={styles.text}> {this.props.user.displayName} </Text>
-        <Text style={styles.text}>
-          {" "}
-          {this.props.user.metadata.lastSignInTime}{" "}
-        </Text>
-        {this.state.loading ? (
-          <Text style={styles.text}></Text>
-        ) : (
-          <View style={styles.list}>
-            <Text style={styles.text}> {this.state.posts.length} Posts </Text>
-            <FlatList
-              data={this.state.posts}
-              keyExtractor={(post) => post.id}
-              renderItem={({ item }) => <MyPost data={item} />}
+      <View style={styles.list}>
+        <View style={styles.info}>
+          <View style={styles.mainInfo}>
+            <Image
+              style={styles.picture}
+              source={{ uri: this.props.user.photoURL }}
             />
+            <View style={styles.user}>
+              <Text style={styles.username}>
+                {" "}
+                @{this.props.user.displayName}{" "}
+              </Text>
+              <Text style={styles.text}> {this.props.user.email} </Text>
+            </View>
           </View>
+          <Text style={styles.text}>
+            {" "}
+            {this.props.user.metadata.lastSignInTime}{" "}
+          </Text>
+          <Text style={styles.text}>
+            {" "}
+            {this.state.posts ? this.state.posts.length : "0"}{" "}
+            {this.state.posts && this.state.posts.length == 1
+              ? "Post"
+              : "Posts"}{" "}
+          </Text>
+          <TouchableOpacity onPress={() => this.props.logout()} style={styles.logout}>
+            <Icon name="logout" color="white" size={15} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        {this.state.loading ? null : (
+          // <View style={styles.list}>
+          <FlatList
+            data={this.state.posts}
+            keyExtractor={(post) => post.id}
+            renderItem={({ item }) => <Post data={item} />}
+          />
+          // </View>
         )}
-        <TouchableOpacity onPress={() => this.props.logout()}>
-          <Text style={styles.text}>Log Out</Text>
-        </TouchableOpacity>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
-  view: {
-    backgroundColor: "rgb(12, 11, 14)",
+  info: {
+    marginBottom: 15,
     display: "flex",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    minHeight: "100vh",
   },
-  list: {
+  mainInfo: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
     width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
   },
-  text: {
+  user: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  username: {
+    fontSize: 20,
+    fontWeight: "bold",
     color: "white",
+    marginBottom: 8
+
   },
   picture: {
-    height: 200,
-    width: 200,
-    borderRadius:'50%'
-  }
+    height: 100,
+    width: 100,
+    borderRadius: "50%",
+    marginTop: 15,
+    marginLeft: 15,
+  },
+  logout:{
+    alignSelf: "flex-end",
+  },
+  icon: {
+    marginRight: 15
+  },
+  list: {
+    flex: 1,
+    backgroundColor: "rgb(12, 11, 14)",
+    // color: 'white',
+    borderRadius: 2,
+    padding: 5,
+  },
+  text: {
+    color: "rgba(87, 84, 95, 0.6)",
+  },
 });
 export default profile;
